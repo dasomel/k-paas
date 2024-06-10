@@ -1,9 +1,9 @@
 # K-PaaS Local Install
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![code](https://img.shields.io/badge/Code-ShellScript-blue)](https://docs.python.org/3/license.html)
+![code](https://img.shields.io/badge/Code-ShellScript-blue)
 ![version](https://img.shields.io/badge/version-1.0.0-blue)
-[![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/README.md#Developer)
+[![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/k-paas?tab=readme-ov-file#developer)
 
 > K-PaaS Local(PC) Install
  
