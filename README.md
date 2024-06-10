@@ -63,17 +63,19 @@ EOF
 ```markdown
 K-paas
 ├── docs
+│   └── images
 ├── logs
 └── scripts
     └── variable
 ```
 
-| Directory | Note                        | Type |
-|-----------|-----------------------------|------|
-| docs      | document                    | .md  |
-| logs      | vagrant logs                | .log |
-| scripts   | vagrant intstll shellscript | .sh  |
-| variable  | cp-cluster-vars.sh          | .sh  |
+| Directory | Note                        | Type       |
+|-----------|-----------------------------|------------|
+| docs      | document                    | .md        |
+| images    | images, video               | .png, .gif |
+| logs      | vagrant logs                | .log       |
+| scripts   | vagrant install shellscript | .sh        |
+| variable  | cp-cluster-vars.sh          | .sh        |
 
 ## Developer
 *  **이기하** ([dasomel](https://github.com/dasomel))
