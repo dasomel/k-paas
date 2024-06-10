@@ -31,6 +31,7 @@
 
 ### Installation
 ```shell
+# ex: vagrant_20240607_201213.log
 vagrant up &> ./logs/vagrant_$(date +%Y%m%d_%H%M%S).log
 ```
 ### VM stop
