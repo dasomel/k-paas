@@ -58,12 +58,13 @@ EOF
 ```
 - windows
 - File: C:\Windows\System32\drivers\etc\hosts
+- Run cmd as administrator
 ```shell
-192.168.100.201 k-paas.io
-192.168.100.201 vault.k-paas.io
-192.168.100.201 harbor.k-paas.io
-192.168.100.201 keycloak.k-paas.io
-192.168.100.201 portal.k-paas.io
+echo.192.168.100.201 k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 vault.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 harbor.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 keycloak.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 portal.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
 ```
 
 ## Stack
