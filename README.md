@@ -25,7 +25,6 @@
 - Intel MacBook
 
 ## Installed Portal Demo
-- portal.haiqv.ai
 ![portal.gif](./docs/images/portal.gif)
 
 ## Getting Started
@@ -60,11 +59,11 @@ EOF
 - File: C:\Windows\System32\drivers\etc\hosts
 - Run cmd as administrator
 ```shell
-echo.192.168.100.201 k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 vault.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 harbor.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 k-paas.io>>          %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 vault.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 harbor.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
 echo.192.168.100.201 keycloak.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 portal.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 portal.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
 ```
 
 ## Stack
