@@ -25,6 +25,7 @@
 - Intel MacBook
 
 ## Installed Portal Demo
+- portal.haiqv.ai
 ![portal.gif](./docs/images/portal.gif)
 
 ## Getting Started
@@ -44,6 +45,8 @@ vagrant destroy -f
 ```
 
 ### Local(PC) setting
+- Macbook, Linux
+- File: /etc/hosts
 ```shell
 sudo cat << EOF | sudo tee -a /etc/hosts
 192.168.100.201 k-paas.io
@@ -52,6 +55,15 @@ sudo cat << EOF | sudo tee -a /etc/hosts
 192.168.100.201 keycloak.k-paas.io
 192.168.100.201 portal.k-paas.io
 EOF
+```
+- windows
+- File: C:\Windows\System32\drivers\etc\hosts
+```shell
+192.168.100.201 k-paas.io
+192.168.100.201 vault.k-paas.io
+192.168.100.201 harbor.k-paas.io
+192.168.100.201 keycloak.k-paas.io
+192.168.100.201 portal.k-paas.io
 ```
 
 ## Stack
