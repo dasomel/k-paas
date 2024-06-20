@@ -10,7 +10,7 @@
 ![main.png](./docs/images/main.png)
 
 ## Description
-- 로컬(Intel 기반 CPU)에서 K-PaaS를 구동하기 위한 Vagrant와 virtualbox 기반의 ShellScript
+- 로컬(Intel 기반 CPU)에서 K-PaaS를 구동하기 위한 Vagrant와 Virtualbox 기반의 ShellScript
 - 기본적으로 모두 자동화되어 있음(실행시 모두 자동 설치)
 - 로컬에서 K-PaaS 설치를 통한 사용자 접근성 및 이해도 향상
 - 설치 과정에서 오류에 대한 트러블슈팅 안내
@@ -48,6 +48,7 @@ vagrant destroy -f
 - File: /etc/hosts
 ```shell
 sudo cat << EOF | sudo tee -a /etc/hosts
+192.168.100.200 cluster-endpoint
 192.168.100.201 k-paas.io
 192.168.100.201 vault.k-paas.io
 192.168.100.201 harbor.k-paas.io
@@ -59,6 +60,7 @@ EOF
 - File: C:\Windows\System32\drivers\etc\hosts
 - Run cmd as administrator
 ```shell
+echo.192.168.100.200 cluster-endpoint>>   %SystemRoot%\system32\drivers\etc\hosts
 echo.192.168.100.201 k-paas.io>>          %SystemRoot%\system32\drivers\etc\hosts
 echo.192.168.100.201 vault.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
 echo.192.168.100.201 harbor.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
