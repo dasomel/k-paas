@@ -69,10 +69,10 @@ vagrant suspend
 vagrant destroy -f
 ```
 
-### Install vagrant log
+### Log
+- vagrant
 ![log_vagrant.gif](./docs/images/log_vagrant.gif)
-
-### Install platform log
+- platform
 ![log_platform.gif](./docs/images/log_platform.gif)
 
 ### Platform installation complete
