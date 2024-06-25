@@ -51,7 +51,7 @@
 - Intel MacBook
 
 ## Installed Portal Demo
-![portal.gif](./docs/images/portal.gif)
+![demo_portal.gif](./docs/images/demo_portal.gif)
 
 ## Getting Started
 
@@ -68,6 +68,12 @@ vagrant suspend
 ```shell
 vagrant destroy -f
 ```
+
+### Install vagrant log
+![log_vagrant.gif](./docs/images/log_vagrant.gif)
+
+### Install platform log
+![log_platform.gif](./docs/images/log_platform.gif)
 
 ### Platform installation complete
 ```shell
