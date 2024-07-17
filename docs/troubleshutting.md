@@ -56,7 +56,7 @@ sudo systemctl restart kubelet
 sudo systemctl restart crio
 
 # status
-journalctl -xfeu kubelet
+sudo journalctl -xfeu kubelet
 ```
 
 ## 03. Vault
