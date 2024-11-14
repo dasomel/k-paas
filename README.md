@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![code](https://img.shields.io/badge/Code-ShellScript-blue)
-![version](https://img.shields.io/badge/version-1.0.0-blue)
+![version](https://img.shields.io/badge/version-1.0.1-blue)
 [![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/k-paas?tab=readme-ov-file#developer)
 
 > K-PaaS Local(PC) Install
@@ -14,7 +14,7 @@
 - 기본적으로 모두 자동화되어 있음(실행시 모두 자동 설치)
 - 로컬에서 K-PaaS 설치를 통한 사용자 접근성 및 이해도 향상
 - 설치 과정에서 오류에 대한 트러블슈팅 안내
-- K-PaaS 최신 버전(v1.5.1) 적용
+- K-PaaS 최신 버전(v1.5.2) 적용
 
 ## Glossary
 - Vagrant

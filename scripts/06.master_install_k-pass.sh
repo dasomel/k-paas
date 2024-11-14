@@ -5,7 +5,7 @@ echo "========== 03.install_k-pass START =========="
 # Global Variable Setting
 source /vagrant/scripts/00.global_variable.sh
 
-# v1.5.1(2024.4.16) Release
+# v1.5.2(2024.9.13) Release
 echo "============== git clone START =============="
 git clone https://github.com/K-PaaS/cp-deployment.git -b branch_v1.5.x
 
@@ -22,9 +22,6 @@ sed -i 's/--become --become-user=root cluster.yml/--become --become-user=root cl
 sed -i 's/hosts.yaml/inventory.ini/g'                                                                                   "$INSTALL_PATH"/cp-deployment/standalone/deploy-cp-cluster.sh
 sed -i'' -r -e "/# Deploy Container Platform/a\mv inventory/mycluster/inventory.ini inventory/mycluster/inventory.yml"  "$INSTALL_PATH"/cp-deployment/standalone/deploy-cp-cluster.sh
 sed -i 's/inventory.ini  --become --become-user=root cluster.yml/inventory.yml  --become --become-user=root cluster.yml -e ignore_assert_errors=yes/g' "$INSTALL_PATH"/cp-deployment/standalone/deploy-cp-cluster.sh
-
-# kubectl version change(1.27.5 -> 1.28.6)
-sed -i 's/v1.27.5/v1.28.6/g' "$INSTALL_PATH"/cp-deployment/single/roles/kubectl/tasks/main.yml
 
 echo "========== deploy-cp-cluster START =========="
 

@@ -10,10 +10,10 @@ mkdir -p "$INSTALL_PATH"/workspace/container-platform
 cd "$INSTALL_PATH"/workspace/container-platform || exit
 
 # Deployment 파일 다운로드 및 파일 경로 확인
-wget --content-disposition https://nextcloud.k-paas.org/index.php/s/2Sy2jzoJRx4aToM/download
+wget --content-disposition https://nextcloud.k-paas.org/index.php/s/2LeyyQTaCySmKzH/download
 
 # Deployment 파일 압축 해제
-tar -xvf cp-portal-deployment-v1.5.1.tar.gz
+tar -xvf cp-portal-deployment-v1.5.2.tar.gz
 
 # 컨테이너 플랫폼 포털 변수 정의
 sed -i 's/{k8s master node public ip}/${PORTAL_MASTER_NODE_PUBLIC_IP}/g'      "$INSTALL_PATH"/workspace/container-platform/cp-portal-deployment/script/cp-portal-vars.sh
