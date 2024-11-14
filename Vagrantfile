@@ -6,8 +6,7 @@ VAGRANT_PROVIDER = 'virtualbox'
 NODE_IP          = "192.168.100."
 
 Vagrant.configure("2") do |config|
-  config.vm.post_up_message  = "K-PaaS v1.5.1 Local Install 1.0"
-  config.vbguest.auto_update = false
+  config.vm.post_up_message  = "K-PaaS v1.5.1 Local Install 1.0.1"
   config.vm.provider VAGRANT_PROVIDER do |vb|
     vb.cpus = 2
     vb.memory = 4096
