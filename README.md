@@ -181,10 +181,13 @@ K-paas
 | scripts   | vagrant install shellscript | .sh        |
 | variable  | cp-cluster-vars.sh          | .sh        |
 
-## Developer
+## Founder
 *  **이기하** ([dasomel](https://github.com/dasomel))
 
-
+## 감사의 말
+ 이 프로젝트는 [카카오엔터프라이즈](https://kakaoenterprise.com)의 지원 덕분에 더욱 발전할 수 있었습니다.  
+ 특히, 다음과 같은 지원에 깊은 감사를 드립니다.
+* 클라우드 리소스 제공 
 
 
 
