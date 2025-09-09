@@ -51,4 +51,8 @@ export NFS_SERVER_PRIVATE_IP=192.168.100.101
 export METALLB_IP_RANGE=192.168.100.210-192.168.100.250
 
 # MetalLB Ingress Nginx Controller LoadBalancer Service External IP
-export INGRESS_NGINX_PRIVATE_IP=192.168.100.201
+export INGRESS_NGINX_IP=192.168.100.201
+
+# Install Kyverno (eg. Y, N)
+# PSS(Pod Security Standards) and cp-policy(Network isolation between namespaces) implemented as Kyverno policies.
+export INSTALL_KYVERNO=Y
