@@ -15,15 +15,15 @@ sudo echo 'net.ipv4.ip_forward=1'       | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 
 # Keepalived setting
-if [ $(hostname) == master01 ]; then
+if [ $(hostname) == lb01 ]; then
 STATE=MASTER
-UNICAST_SRC_IP=$MASTER01
-UNICAST_PEER=$MASTER02
+UNICAST_SRC_IP=$LB01
+UNICAST_PEER=$LB02
 PRIORITY=110
-elif [ $(hostname) == master02 ]; then
+elif [ $(hostname) == lb02 ]; then
 STATE=BACKUP
-UNICAST_SRC_IP=$MASTER02
-UNICAST_PEER=$MASTER01
+UNICAST_SRC_IP=$LB02
+UNICAST_PEER=$LB01
 PRIORITY=109
 fi
 INTERFACE_NAME=$VM_INTERFACE_NAME
@@ -50,6 +50,14 @@ EOF
 sudo systemctl start keepalived
 sudo systemctl enable keepalived
 
+# Wait until the VIP is bound to the interface
+if [ $(hostname) == lb01 ]; then
+  while ! ip addr | grep -q "$CLUSTER_ENDPOINT"; do
+    echo "Waiting for VIP $CLUSTER_ENDPOINT to be assigned..."
+    sleep 1
+  done
+fi
+
 # HAProxy install
 sudo apt-get install -y haproxy
 
@@ -65,5 +73,23 @@ listen kubernetes-apiserver-https
   balance roundrobin
 EOF
 
-sudo systemctl start haproxy
+sudo systemctl restart haproxy
 sudo systemctl enable haproxy
+
+if [ $(hostname) == lb01 ]; then
+  if ! sudo ss -tnlp | grep -q ':6443'; then
+    echo "haproxy is not listening on port 6443 (VIP). Reloading haproxy."
+    sudo systemctl reload haproxy
+    # Re-check after reload (repeat if necessary)
+    sleep 2
+    if sudo ss -tnlp | grep -q ':6443'; then
+      echo "haproxy is successfully listening on port 6443."
+    else
+      echo "Even after reload, haproxy is not listening on port 6443."
+      echo "Please check the configuration and VIP status."
+      exit 1
+    fi
+  else
+    echo "haproxy is already listening on port 6443."
+  fi
+fi

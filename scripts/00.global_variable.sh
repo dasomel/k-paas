@@ -7,9 +7,11 @@ export DEBIAN_FRONTEND=noninteractive
 export INSTALL_PATH=/home/vagrant
 
 # VirtualBox
-export VM_INTERFACE_NAME=enp0s8
+export VM_INTERFACE_NAME=eth1
 
 # Node
+export LB01=192.168.100.121
+export LB02=192.168.100.122
 export MASTER01=192.168.100.101
 export MASTER02=192.168.100.102
 export WORKER01=192.168.100.111
