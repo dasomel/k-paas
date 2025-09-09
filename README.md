@@ -5,10 +5,7 @@
 ![version](https://img.shields.io/badge/version-2.0.0-blue)
 [![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/k-paas?tab=readme-ov-file#developer)
 
-
-> K-PaaS Local(PC) Install
-
-English | [한국어 안내(README.ko.md)](README.ko.md)
+English | [한국어](README.ko.md)
 
 ![main.png](./docs/images/portal_main_1.6.2.png)
 
