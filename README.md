@@ -47,7 +47,7 @@ English | [한국어](README.ko.md)
   - Widely used by developers, system administrators, DevOps engineers, etc. for keeping infrastructure stable and consistent through automation
     
 ## Test device specifications
-- Arm MacBook
+- MacMini(ARM)
 
 ## Installed Portal Demo
 ![demo_portal.gif](./docs/images/demo_portal.gif)
@@ -143,7 +143,7 @@ openbao          openbao-agent-injector-6567764cc9-rx54t                 1/1    
 ```
 
 ### Local(PC) setting
-- Macbook, Linux
+- MacOS, Linux
 - File: /etc/hosts
 ```shell
 sudo cat << EOF | sudo tee -a /etc/hosts
@@ -170,7 +170,7 @@ echo.192.168.100.201 portal.k-paas.io>>   %SystemRoot%\system32\drivers\etc\host
 
 ## Stack
 - **Language**: Shellscript
-- **Deploy**: Local NoteBook(Intel Macbook)
+- **Deploy**: Local PC
 
 ## Project Structure
 
