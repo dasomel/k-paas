@@ -1,0 +1,18 @@
+#cloud-config
+ssh_pwauth: True
+disable_root: false
+chpasswd:
+  list: |
+    ubuntu:kpaas1234
+  expire: False
+
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCdggT/eGllgbiY7OLtNm3C46K1ycJwwEZY7KwNf8CskZtsv36Wg9D3RtLwZOehXvgJNsa5abLoVts55OhA6HgVaD6ViknqwTHIP2s+Lv2os8CHFB8YPKnAeN83hz6y6WoCETXv/563zJYkHGSOYjTvEylJnRClBE5V928uLzXZRMYB942bSvdfZQ3pPDMVEBG7oGzIdO5RuCXnqrkfb+k/jmiSmYaoVxqIS7M6KzdkrJU0pEAozoyFyRNjFbsBmPq08Pe1o5bYygnIfq0bd5s98vYJYd1GI0ajW9FLe0iPVa/+UAzo21hzbn1w50k94DiWpQSWLG45oszNKPouItl
+
+runcmd:
+  - sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i 's/^PubkeyAuthentication no/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl restart sshd
+  - echo "cloud-init completed" > /tmp/cloud-init-done

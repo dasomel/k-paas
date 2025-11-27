@@ -1,0 +1,69 @@
+#####################################################################
+# Kakao Cloud Provider Credentials
+#####################################################################
+# Kakao Cloud 콘솔에서 발급받은 Application Credential 정보를 입력하세요
+application_credential_id     = "YOUR_APPLICATION_CREDENTIAL_ID"
+application_credential_secret = "YOUR_APPLICATION_CREDENTIAL_SECRET"
+
+#####################################################################
+# Network Configuration
+#####################################################################
+# NOTE: Kakao Cloud provider v0.1.4 버그로 인해 VPC 리소스의 name, cidr_block,
+# subnet 속성은 modules/network/main.tf에서 하드코딩되어 있습니다.
+# VPC 설정을 변경하려면 modules/network/main.tf 파일을 직접 수정해야 합니다.
+
+vpc_name                = "test-kpaas"
+vpc_cidr                = "172.16.0.0/16"
+vpc_default_subnet_cidr = "172.16.255.0/24"
+subnet_name             = "main_subnet"
+subnet_cidr             = "172.16.0.0/24"
+availability_zone       = "kr-central-2-a"
+
+#####################################################################
+# Security Configuration
+#####################################################################
+security_group_name = "kpaas-security-group"
+key_name            = "YOUR_KEYPAIR_NAME"           # Kakao Cloud 키페어 이름
+ssh_key_path        = "./YOUR_KEYPAIR.pem"          # SSH 개인키 파일 경로
+
+#####################################################################
+# Compute Configuration
+#####################################################################
+# Instance naming
+master_name = "master"
+worker_name = "worker"
+
+# Instance count
+master_count = 3  # Master 노드 수 (HA를 위해 3개 권장)
+worker_count = 3  # Worker 노드 수 (최소 3개 권장)
+
+# Instance specification
+image_name      = "Ubuntu 24.04"   # OS 이미지 (Ubuntu 24.04 또는 22.04)
+instance_flavor = "t1i.xlarge"     # 인스턴스 타입 (CPU 4core, RAM 8GB)
+volume_size     = 200              # 디스크 크기 (GB)
+
+#####################################################################
+# Load Balancer Configuration
+#####################################################################
+master_lb_name = "master-lb"  # Master LB 이름 (K8s API Server용)
+worker_lb_name = "worker-lb"  # Worker LB 이름 (Ingress용)
+
+#####################################################################
+# K-PaaS Provisioning Configuration
+#####################################################################
+# MetalLB IP range (K8s LoadBalancer 서비스용 IP 풀)
+# VPC CIDR 범위 내에서 사용하지 않는 IP 범위를 지정하세요
+metallb_ip_range = "172.16.0.210-172.16.0.250"
+
+# Ingress Nginx LoadBalancer IP
+# MetalLB IP 범위 밖의 고정 IP를 지정하세요
+ingress_nginx_ip = "172.16.0.201"
+
+# Portal domain
+# K-PaaS Portal에서 사용할 도메인 이름
+portal_domain = "k-paas.io"
+
+# Auto installation
+# true: Terraform 배포 후 자동으로 K-PaaS 설치 시작
+# false: 수동으로 Master-1에 접속하여 설치 스크립트 실행
+auto_install_kpaas = true
