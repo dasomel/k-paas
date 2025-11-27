@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egovframe-web-sample
+  namespace: egovframe
+  labels:
+    app: egovframe-web-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egovframe-web-sample
+  template:
+    metadata:
+      labels:
+        app: egovframe-web-sample
+    spec:
+      containers:
+        - name: egovframe-web-sample
+          image: harbor.k-paas.io/egovframe/egovframe-web-sample:4.3.0
+          ports:
+            - name: web
+              containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false                # 권한 상승 금지
+            runAsNonRoot: true                             # Non-root 유저로 실행
+            capabilities:
+              drop:
+                - ALL                                       # 모든 추가 권한 제거
+            seccompProfile:
+              type: RuntimeDefault
+          imagePullPolicy: IfNotPresent
+      imagePullSecrets:
+        - name: egovregistrykey
+

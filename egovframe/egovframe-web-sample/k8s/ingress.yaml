@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: egovframe-web-sample
+    app.kubernetes.io/instance: egovframe-web-sample
+    app.kubernetes.io/name: egovframe-web-sample
+    app.kubernetes.io/version: 4.3.0
+  name: egovframe-web-sample
+  namespace: egovframe
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: egovframe-web-sample.k-paas.io
+      http:
+        paths:
+          - backend:
+              service:
+                name: egovframe-web-sample
+                port:
+                  name: web
+            path: /
+            pathType: ImplementationSpecific
