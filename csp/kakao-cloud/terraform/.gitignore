@@ -1,0 +1,27 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Generated scripts (auto-created by Terraform)
+generated/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# SSH Keys
+*.pem
+*.key
+id_rsa*

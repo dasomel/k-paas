@@ -109,3 +109,40 @@ Temporary Items
 # Vagrant
 .vagrant
 logs/**
+!/egovframe/egovframe-web-sample/k8s/secret.yaml
+/csp/kakao-cloud/terraform/.claude/
+/csp/kakao-cloud/terraform/.terraform/
+
+# Backup folders
+**/00_bak/
+**/00.bak/
+**/bak/
+**/bak2/
+
+# VS Code
+.vscode/
+
+# AI tool files
+CLAUDE.md
+GEMINI.md
+
+# Reports
+Reports/
+
+# Offline files
+offline-file/
+
+# Source folder (build artifacts)
+source/
+
+# Container images (tar.gz)
+scripts/arm/cp-portal/images/*.tar.gz
+
+# Temporary scripts
+fix_mariadb.sh
+
+# AI coding tools
+.crush/
+.ruby-lsp/
+.agent/
+*.key

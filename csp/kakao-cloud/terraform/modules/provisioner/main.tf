@@ -60,6 +60,7 @@ resource "local_file" "global_variable" {
     worker2_private_ip  = local.worker2_private_ip
     worker3_private_ip  = local.worker3_private_ip
     ingress_nginx_ip    = var.ingress_nginx_ip
+    portal_domain       = var.portal_domain
   })
   filename        = "${var.generated_dir}/00.global_variable.sh"
   file_permission = "0755"
@@ -102,7 +103,23 @@ resource "local_file" "all_common_setting" {
 
 # 템플릿에서 05.master_install_k-pass.sh 생성
 resource "local_file" "master_install_kpaas" {
-  content         = file("${path.module}/templates/05.master_install_k-pass.sh.tpl")
+  content = templatefile("${path.module}/templates/05.master_install_k-pass.sh.tpl", {
+    master01_hostname = "master01"
+    master01_ip       = local.master1_private_ip
+    master02_hostname = "master02"
+    master02_ip       = local.master2_private_ip
+    master03_hostname = "master03"
+    master03_ip       = local.master3_private_ip
+    worker01_hostname = "worker01"
+    worker01_ip       = local.worker1_private_ip
+    worker02_hostname = "worker02"
+    worker02_ip       = local.worker2_private_ip
+    worker03_hostname = "worker03"
+    worker03_ip       = local.worker3_private_ip
+    cluster_endpoint  = var.master_lb_vip
+    metallb_ip_range  = var.metallb_ip_range
+    ingress_nginx_ip  = var.ingress_nginx_ip
+  })
   filename        = "${var.generated_dir}/05.master_install_k-pass.sh"
   file_permission = "0755"
 }
@@ -154,6 +171,19 @@ resource "null_resource" "provision_master1" {
     inline = [
       "mkdir -p /home/ubuntu/scripts",
       "mkdir -p /home/ubuntu/scripts/variable"
+    ]
+  }
+
+  # 접속 pem 키 파일 복사
+  provisioner "file" {
+    source      = pathexpand(var.ssh_key_path)
+    destination = "/home/ubuntu/.ssh/kaas_keypriar.pem"
+  }
+
+  # 키 파일 권한 설정
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 /home/ubuntu/.ssh/kaas_keypriar.pem"
     ]
   }
 

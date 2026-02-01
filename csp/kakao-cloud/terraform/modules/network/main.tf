@@ -2,7 +2,7 @@
 # This module manages VPC and Subnet resources for K-PaaS deployment
 
 # VPC 생성 (생성시 약 5분 이상 소요)
-# NOTE: Kakao Cloud provider v0.1.4 has a validation bug that prevents using
+# NOTE: Kakao Cloud provider v0.2.0 has a validation bug that prevents using
 # variables for name, cidr_block, and subnet attributes. These must be hardcoded.
 # This is a known provider limitation. If you need different values, edit them here.
 resource "kakaocloud_vpc" "kpaas_vpc" {

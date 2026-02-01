@@ -43,4 +43,4 @@ export CLUSTER_ENDPOINT=${master_lb_vip}
 # Portal
 export PORTAL_MASTER_NODE_PUBLIC_IP=${master_lb_public_ip}
 export PORTAL_HOST_IP=${ingress_nginx_ip}
-export PORTAL_HOST_DOMAIN=k-paas.io
+export PORTAL_HOST_DOMAIN=${portal_domain}

@@ -35,6 +35,7 @@ module "security" {
 
   security_group_name = var.security_group_name
   vpc_cidr            = module.network.vpc_cidr
+  depends_on          = [module.network]
 }
 
 #####################################################################
@@ -48,12 +49,14 @@ module "compute" {
   master_count        = var.master_count
   worker_count        = var.worker_count
   image_name          = var.image_name
-  instance_flavor     = var.instance_flavor
+  master_flavor       = var.master_flavor
+  worker_flavor       = var.worker_flavor
   volume_size         = var.volume_size
   key_name            = var.key_name
   subnet_id           = module.network.subnet_id
   security_group_name = module.security.security_group_name
   cloud_init_base64   = filebase64("${path.module}/cloud-init.yaml")
+  depends_on          = [module.security]
 }
 
 #####################################################################
@@ -72,6 +75,8 @@ module "loadbalancer" {
   master_public_ips_dependency = module.compute.master_public_ip_objects
   worker_instances_dependency  = module.compute.worker_instances
   worker_public_ips_dependency = module.compute.worker_public_ip_objects
+  # depends_on removed to allow parallel creation with compute module
+
 }
 
 #####################################################################
@@ -98,5 +103,5 @@ module "provisioner" {
   auto_install_kpaas   = var.auto_install_kpaas
   master_lb_dependency = module.loadbalancer.master_lb
 
-  depends_on = [null_resource.create_generated_dir]
+  depends_on = [module.compute, null_resource.create_generated_dir]
 }

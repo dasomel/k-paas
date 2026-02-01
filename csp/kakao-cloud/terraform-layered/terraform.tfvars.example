@@ -1,0 +1,44 @@
+# Kakao Cloud Credentials Example
+# Copy this to each layer's terraform.tfvars and fill in your credentials
+
+#####################################################################
+# Kakao Cloud Provider Credentials
+#####################################################################
+application_credential_id     = "your-credential-id"
+application_credential_secret = "your-credential-secret"
+
+#####################################################################
+# 01-network specific
+#####################################################################
+# vpc_name          = "kpaas-vpc"
+# vpc_cidr          = "172.16.0.0/16"
+# subnet_name       = "kpaas-subnet"
+# subnet_cidr       = "172.16.0.0/24"
+# availability_zone = "kr-central-2-a"
+
+#####################################################################
+# 02-loadbalancer specific
+#####################################################################
+# security_group_name = "kpaas-sg"
+# master_lb_name      = "kpaas-master-lb"
+# worker_lb_name      = "kpaas-worker-lb"
+# master_private_ips  = ["172.16.0.101", "172.16.0.102", "172.16.0.103"]
+# worker_private_ips  = ["172.16.0.111", "172.16.0.112", "172.16.0.113"]
+
+#####################################################################
+# 03-cluster specific
+#####################################################################
+# master_name        = "master"
+# worker_name        = "worker"
+# master_count       = 3
+# worker_count       = 3
+# image_name         = "Ubuntu 24.04"
+# master_flavor      = "t1i.large"
+# worker_flavor      = "t1i.xlarge"
+# volume_size        = 200
+# key_name           = "KPAAS_KEYPAIR"
+# ssh_key_path       = "../../terraform/KPAAS_KEYPAIR.pem"
+# metallb_ip_range   = "172.16.0.210-172.16.0.250"
+# ingress_nginx_ip   = "172.16.0.201"
+# portal_domain      = "k-paas.io"
+# auto_install_kpaas = true

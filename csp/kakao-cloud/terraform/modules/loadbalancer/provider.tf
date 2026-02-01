@@ -4,7 +4,7 @@ terraform {
     # Kakao Cloud Provider 설정
     kakaocloud = {
       source  = "kakaoenterprise/kakaocloud"
-      version = "0.1.4"
+      version = "0.2.0"
     }
     local = {
       source  = "hashicorp/local"

@@ -18,7 +18,7 @@ USER 1000
 RUN mvn package -DskipTests
 
 
-FROM docker.io/library/tomcat:8.5.96-jdk8-temurin-jammy as tomcat
+FROM docker.io/library/tomcat:8.5.100-jdk8-temurin-jammy as tomcat
 LABEL maintainer="dasomell@gmail.com"
 LABEL title="egovframe-web-sample"
 LABEL version="4.3.0"
