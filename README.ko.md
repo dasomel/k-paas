@@ -1,25 +1,25 @@
-# K-PaaS Local Install
+# K-PaaS Lite
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![code](https://img.shields.io/badge/Code-ShellScript-blue)
-![version](https://img.shields.io/badge/version-2.0.0-blue)
+![version](https://img.shields.io/badge/version-2.2.0-blue)
 [![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/k-paas?tab=readme-ov-file#developer)
 
-[English](README.md) | 한국어
+[English](README.md) | 한국어 | [변경이력](CHANGELOG.ko.md)
 
 ![main.png](./docs/images/portal_main_1.6.2.png)
 
 ## Description
-- 로컬(Arm 기반 CPU)에서 K-PaaS를 구동하기 위한 Vagrant와 Virtualbox 기반의 ShellScript
-- 기본적으로 자동화되어 있음
-- 로컬에서 K-PaaS 설치를 통한 사용자 접근성 및 이해도 향상
+- Vagrant 기반 경량 K-PaaS 설치 도구 (VirtualBox, VMware 지원 / ARM CPU 지원)
+- 완전 자동화 배포
+- 간소화된 K-PaaS 설치를 통한 사용자 접근성 및 이해도 향상
 - 설치 과정에서 오류에 대한 트러블슈팅 안내
-- K-PaaS 최신 버전(v1.6.2) 적용
+- K-PaaS 최신 버전(v1.7.0) 적용
 
 ## Glossary
 - Vagrant
     - 가상 환경을 손쉽게 설정하고 관리하기 위한 도구
-    - 가상 머신을 쉽게 생성하고, 프로비저닝1)하며, 관리
+    - 가상 머신을 쉽게 생성하고, 프로비저닝하며, 관리
     - 개발 환경이나 테스트 환경을 빠르게 구축하고 공유
     - 가상화 기술을 기반으로 하며, 다양한 가상화 플랫폼을 지원
     - 개발자들은 Vagrant를 사용하여 프로젝트 간의 일관된 환경을 유지하고, 팀 간의 협업이 용이
@@ -30,6 +30,12 @@
     - 다양한 운영 체제나 환경에서 소프트웨어를 테스트하거나 개발
     - 무료이며 오픈 소스로 제공되어 사용자들이 자유롭게 활용 가능
     - Oracle Corporation에 의해 개발되었으며, 다양한 운영 체제와 호환되는 특징
+- VMware
+    - 가상화 소프트웨어로, VMware Fusion Pro (macOS) 및 VMware Workstation Pro (Windows/Linux) 제공
+    - Apple Silicon (ARM64) Mac에서 가상화를 지원하는 VMware Fusion 사용 가능
+    - VirtualBox보다 향상된 성능과 안정성 제공
+    - Vagrant와 통합을 위해 VMware Desktop Provider 플러그인 필요
+    - 2024년 11월부터 모든 사용자(개인, 교육, 상업용)에게 무료 제공, 라이선스 키 불필요
 - Kubespray
     - Kubernetes를 손쉽게 배포하고 관리하기 위한 오픈 소스 도구
     - Ansible을 기반으로 하여 여러 대의 서버에 Kubernetes 클러스터를 배포하고 설정하는 작업을 자동화
@@ -54,16 +60,43 @@
 
 ## Getting Started
 
-### Installation
+### 사전 준비
+
+#### VirtualBox (x86/Intel)
+```shell
+# VirtualBox 설치
+brew install --cask virtualbox
+```
+
+#### VMware (ARM64/Apple Silicon)
+```shell
+# VMware Fusion 설치
+brew install --cask vmware-fusion
+
+# Vagrant VMware 플러그인 설치
+vagrant plugin install vagrant-vmware-desktop
+```
+
+### 설치
+
+#### VirtualBox
 ```shell
 # ex: vagrant_20240607_201213.log
 vagrant up &> ./logs/vagrant_$(date +%Y%m%d_%H%M%S).log
 ```
-### VM stop
+
+#### VMware
+```shell
+# VMware provider로 실행
+vagrant up --provider=vmware_desktop &> ./logs/vagrant_$(date +%Y%m%d_%H%M%S).log
+```
+
+### VM 정지
 ```shell
 vagrant suspend
 ```
-### VM destory
+
+### VM 삭제
 ```shell
 vagrant destroy -f
 ```
@@ -160,12 +193,13 @@ EOF
 - File: C:\Windows\System32\drivers\etc\hosts
 - Run cmd as administrator
 ```shell
-echo.192.168.100.200 cluster-endpoint>>   %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 k-paas.io>>          %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 vault.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 harbor.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 keycloak.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 portal.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.200 cluster-endpoint>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 k-paas.io>>           %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 openbao.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 harbor.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 keycloak.k-paas.io>>  %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 portal.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 chartmuseum.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
 ```
 
 ## Stack
@@ -179,19 +213,55 @@ K-paas
 ├── docs
 │   └── images
 ├── logs
-└── scripts
-    ├── arm
-    └── variable
+├── scripts
+├── egovframe
+│   └── egovframe-web-sample
+└── csp
+    └── kakao-cloud
 ```
 
-| Directory | Note                        | Type       |
-|-----------|-----------------------------|------------|
-| docs      | document                    | .md        |
-| images    | images, video               | .png, .gif |
-| logs      | vagrant logs                | .log       |
-| scripts   | vagrant install shellscript | .sh        |
-| arm       | arm support shell           | .sh        |
-| variable  | cp-cluster-vars.sh          | .sh        |
+| Directory | Note | Type |
+|-----------|------|------|
+| docs | 문서 | .md |
+| images | 이미지, 비디오 | .png, .gif |
+| logs | vagrant 로그 | .log |
+| scripts | 설치 쉘 스크립트 | .sh |
+| egovframe | 표준프레임워크 샘플 | Dockerfile |
+| csp | 클라우드 서비스 제공자 배포 | .tf |
+
+## 클라우드 배포
+
+### 카카오 클라우드
+
+로컬 Vagrant 배포 외에도 Terraform을 사용하여 [카카오 클라우드](https://cloud.kakao.com)에 K-PaaS를 배포할 수 있습니다.
+
+#### 주요 기능
+- 3-Layer Terraform 아키텍처 (Network → LoadBalancer → Cluster)
+- 6노드 HA 클러스터 (Master 3 + Worker 3)
+- API Server 및 Ingress용 Network Load Balancer
+- K-PaaS Container Platform 자동 설치
+
+#### 빠른 시작
+```shell
+cd csp/kakao-cloud/terraform-layered
+
+# 변수 설정
+cp terraform.tfvars.example terraform.tfvars
+vim terraform.tfvars
+
+# 배포
+./deploy.sh
+```
+
+#### 클러스터 사양
+| 컴포넌트 | 사양 | 개수 |
+|----------|------|------|
+| Master | t1i.xlarge (4 vCPU, 16GB) | 3 |
+| Worker | t1i.xlarge (4 vCPU, 16GB) | 3 |
+| Master LB | Network Load Balancer (L4) | 1 |
+| Worker LB | Network Load Balancer (L4) | 1 |
+
+자세한 문서는 [csp/kakao-cloud/README.md](csp/kakao-cloud/terraform/README.md)를 참조하세요.
 
 ## Founder
 *  **이기하** ([dasomel](https://github.com/dasomel))

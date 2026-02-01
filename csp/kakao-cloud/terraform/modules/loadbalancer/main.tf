@@ -22,7 +22,8 @@ resource "kakaocloud_load_balancer" "master_lb" {
   subnet_id         = var.subnet_id
   flavor_id         = local.lb_flavor_nlb_id
 
-  depends_on = [var.master_instances_dependency, var.master_public_ips_dependency]
+  # depends_on removed to allow parallel creation
+
 }
 
 resource "kakaocloud_public_ip" "master_lb_ip" {
@@ -72,9 +73,9 @@ resource "kakaocloud_load_balancer_target_group" "etcd" {
 
 # Master Target Group Members (K8s API)
 resource "kakaocloud_load_balancer_target_group_member" "master_members" {
-  count           = length(var.master_private_ips)
+  for_each        = { for i, ip in var.master_private_ips : i => ip }
   target_group_id = kakaocloud_load_balancer_target_group.masters.id
-  address         = var.master_private_ips[count.index]
+  address         = each.value
   subnet_id       = var.subnet_id
   protocol_port   = 6443
   weight          = 1
@@ -82,9 +83,9 @@ resource "kakaocloud_load_balancer_target_group_member" "master_members" {
 
 # etcd Target Group Members
 resource "kakaocloud_load_balancer_target_group_member" "etcd_members" {
-  count           = length(var.master_private_ips)
+  for_each        = { for i, ip in var.master_private_ips : i => ip }
   target_group_id = kakaocloud_load_balancer_target_group.etcd.id
-  address         = var.master_private_ips[count.index]
+  address         = each.value
   subnet_id       = var.subnet_id
   protocol_port   = 2379
   weight          = 1
@@ -101,7 +102,8 @@ resource "kakaocloud_load_balancer" "worker_lb" {
   subnet_id         = var.subnet_id
   flavor_id         = local.lb_flavor_nlb_id
 
-  depends_on = [var.worker_instances_dependency, var.worker_public_ips_dependency]
+  # depends_on removed to allow parallel creation
+
 }
 
 resource "kakaocloud_public_ip" "worker_lb_ip" {
@@ -151,9 +153,9 @@ resource "kakaocloud_load_balancer_target_group" "workers_https" {
 
 # Worker Target Group Members (HTTP)
 resource "kakaocloud_load_balancer_target_group_member" "worker_http_members" {
-  count           = length(var.worker_private_ips)
+  for_each        = { for i, ip in var.worker_private_ips : i => ip }
   target_group_id = kakaocloud_load_balancer_target_group.workers_http.id
-  address         = var.worker_private_ips[count.index]
+  address         = each.value
   subnet_id       = var.subnet_id
   protocol_port   = 31080
   weight          = 1
@@ -161,9 +163,9 @@ resource "kakaocloud_load_balancer_target_group_member" "worker_http_members" {
 
 # Worker Target Group Members (HTTPS)
 resource "kakaocloud_load_balancer_target_group_member" "worker_https_members" {
-  count           = length(var.worker_private_ips)
+  for_each        = { for i, ip in var.worker_private_ips : i => ip }
   target_group_id = kakaocloud_load_balancer_target_group.workers_https.id
-  address         = var.worker_private_ips[count.index]
+  address         = each.value
   subnet_id       = var.subnet_id
   protocol_port   = 31443
   weight          = 1

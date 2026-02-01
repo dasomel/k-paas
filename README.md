@@ -1,20 +1,20 @@
-# K-PaaS Local Install
+# K-PaaS Lite
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![code](https://img.shields.io/badge/Code-ShellScript-blue)
-![version](https://img.shields.io/badge/version-2.0.0-blue)
+![version](https://img.shields.io/badge/version-2.2.0-blue)
 [![member](https://img.shields.io/badge/Project-Member-brightgreen)](https://github.com/dasomel/k-paas?tab=readme-ov-file#developer)
 
-English | [한국어](README.ko.md)
+English | [한국어](README.ko.md) | [Changelog](CHANGELOG.md)
 
 ![main.png](./docs/images/portal_main_1.6.2.png)
 
 ## Description
-- A ShellScript based on Vagrant and VirtualBox to run K-PaaS locally (on ARM-based CPUs)
-- Basically automated by default
-- Improves user accessibility and understanding through local installation of K-PaaS
+- Lightweight K-PaaS installation tool based on Vagrant (VirtualBox, VMware support / ARM CPU support)
+- Fully automated deployment
+- Improves user accessibility and understanding through simplified K-PaaS setup
 - Provides troubleshooting guidance for errors during the installation process
-- Applies the latest version of K-PaaS (v1.6.2)
+- Applies the latest version of K-PaaS (v1.7.0)
 
 ## Glossary
 - Vagrant
@@ -30,6 +30,12 @@ English | [한국어](README.ko.md)
   - Useful for testing or developing software in different operating systems or environments
   - Free and open source, allowing users to utilize it freely
   - Developed by Oracle Corporation, and features compatibility with many operating systems
+- VMware
+  - Virtualization software, offering VMware Fusion Pro (macOS) and VMware Workstation Pro (Windows/Linux)
+  - VMware Fusion supports virtualization on Apple Silicon (ARM64) Macs
+  - Provides improved performance and stability compared to VirtualBox
+  - Requires VMware Desktop Provider plugin for Vagrant integration
+  - Free for all users (personal, educational, commercial) since November 2024, no license key required
 - Kubespray
   - An open-source tool for easily deploying and managing Kubernetes
   - Automates the deployment and configuration of Kubernetes clusters on multiple servers using Ansible
@@ -54,16 +60,43 @@ English | [한국어](README.ko.md)
 
 ## Getting Started
 
+### Prerequisites
+
+#### VirtualBox (x86/Intel)
+```shell
+# Install VirtualBox
+brew install --cask virtualbox
+```
+
+#### VMware (ARM64/Apple Silicon)
+```shell
+# Install VMware Fusion
+brew install --cask vmware-fusion
+
+# Install Vagrant VMware plugin
+vagrant plugin install vagrant-vmware-desktop
+```
+
 ### Installation
+
+#### VirtualBox
 ```shell
 # ex: vagrant_20240607_201213.log
 vagrant up &> ./logs/vagrant_$(date +%Y%m%d_%H%M%S).log
 ```
+
+#### VMware
+```shell
+# Run with VMware provider
+vagrant up --provider=vmware_desktop &> ./logs/vagrant_$(date +%Y%m%d_%H%M%S).log
+```
+
 ### VM stop
 ```shell
 vagrant suspend
 ```
-### VM destory
+
+### VM destroy
 ```shell
 vagrant destroy -f
 ```
@@ -160,12 +193,13 @@ EOF
 - File: C:\Windows\System32\drivers\etc\hosts
 - Run cmd as administrator
 ```shell
-echo.192.168.100.200 cluster-endpoint>>   %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 k-paas.io>>          %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 vault.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 harbor.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 keycloak.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
-echo.192.168.100.201 portal.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.200 cluster-endpoint>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 k-paas.io>>           %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 openbao.k-paas.io>>   %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 harbor.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 keycloak.k-paas.io>>  %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 portal.k-paas.io>>    %SystemRoot%\system32\drivers\etc\hosts
+echo.192.168.100.201 chartmuseum.k-paas.io>> %SystemRoot%\system32\drivers\etc\hosts
 ```
 
 ## Stack
@@ -179,19 +213,55 @@ K-paas
 ├── docs
 │   └── images
 ├── logs
-└── scripts
-    ├── arm
-    └── variable
+├── scripts
+├── egovframe
+│   └── egovframe-web-sample
+└── csp
+    └── kakao-cloud
 ```
 
-| Directory | Note                        | Type       |
-|-----------|-----------------------------|------------|
-| docs      | document                    | .md        |
-| images    | images, video               | .png, .gif |
-| logs      | vagrant logs                | .log       |
-| scripts   | vagrant install shellscript | .sh        |
-| arm       | arm support shell           | .sh        |
-| variable  | cp-cluster-vars.sh          | .sh        |
+| Directory | Note | Type |
+|-----------|------|------|
+| docs | documentation | .md |
+| images | images, video | .png, .gif |
+| logs | vagrant logs | .log |
+| scripts | installation shell scripts | .sh |
+| egovframe | standard framework samples | Dockerfile |
+| csp | cloud service provider deployments | .tf |
+
+## Cloud Deployment
+
+### Kakao Cloud
+
+In addition to local Vagrant deployment, K-PaaS can be deployed on [Kakao Cloud](https://cloud.kakao.com) using Terraform.
+
+#### Features
+- 3-Layer Terraform architecture (Network → LoadBalancer → Cluster)
+- 6-node HA cluster (3 Masters + 3 Workers)
+- Network Load Balancer for API Server and Ingress
+- Automated K-PaaS Container Platform installation
+
+#### Quick Start
+```shell
+cd csp/kakao-cloud/terraform-layered
+
+# Configure variables
+cp terraform.tfvars.example terraform.tfvars
+vim terraform.tfvars
+
+# Deploy
+./deploy.sh
+```
+
+#### Cluster Specifications
+| Component | Spec | Count |
+|-----------|------|-------|
+| Master | t1i.xlarge (4 vCPU, 16GB) | 3 |
+| Worker | t1i.xlarge (4 vCPU, 16GB) | 3 |
+| Master LB | Network Load Balancer (L4) | 1 |
+| Worker LB | Network Load Balancer (L4) | 1 |
+
+For detailed documentation, see [csp/kakao-cloud/README.md](csp/kakao-cloud/terraform/README.md).
 
 ## Founder
 *  **Kiha Lee** ([dasomel](https://github.com/dasomel))

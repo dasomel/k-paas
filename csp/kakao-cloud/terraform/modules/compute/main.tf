@@ -12,9 +12,14 @@ locals {
     if image.name == var.image_name
   ][0]
 
-  instance_flavor_id = [
+  master_flavor_id = [
     for flavor in data.kakaocloud_instance_flavors.flavors_all.instance_flavors : flavor.id
-    if flavor.name == var.instance_flavor
+    if flavor.name == var.master_flavor
+  ][0]
+
+  worker_flavor_id = [
+    for flavor in data.kakaocloud_instance_flavors.flavors_all.instance_flavors : flavor.id
+    if flavor.name == var.worker_flavor
   ][0]
 }
 
@@ -23,7 +28,7 @@ resource "kakaocloud_instance" "master" {
   count       = var.master_count
   name        = "${var.master_name}-${count.index + 1}"
   description = "K-PaaS Master 노드 (Control Plane)"
-  flavor_id   = local.instance_flavor_id
+  flavor_id   = local.master_flavor_id
   image_id    = local.ubuntu24_id
   key_name    = var.key_name
 
@@ -60,7 +65,7 @@ resource "kakaocloud_instance" "worker" {
   count       = var.worker_count
   name        = "${var.worker_name}-${count.index + 1}"
   description = "K-PaaS Worker 노드 (Data Plane)"
-  flavor_id   = local.instance_flavor_id
+  flavor_id   = local.worker_flavor_id
   image_id    = local.ubuntu24_id
   key_name    = var.key_name
 

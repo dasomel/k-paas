@@ -30,10 +30,14 @@ variable "image_name" {
   default     = "Ubuntu 24.04"
 }
 
-variable "instance_flavor" {
-  description = "Instance flavor (size)"
+variable "master_flavor" {
+  description = "Master instance flavor"
   type        = string
-  default     = "t1i.xlarge"
+}
+
+variable "worker_flavor" {
+  description = "Worker instance flavor"
+  type        = string
 }
 
 variable "volume_size" {

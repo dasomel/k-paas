@@ -51,9 +51,9 @@ K-PaaS 클러스터의 상세 아키텍처, 네트워크 구성, 컴포넌트 �
 | 구분 | 사양 |
 |------|------|
 | **클라우드** | Kakao Cloud (kr-central-2-a) |
-| **Kubernetes** | v1.32.5 |
-| **K-PaaS** | v1.6.2 |
-| **컨테이너 런타임** | CRI-O v1.32.x |
+| **Kubernetes** | v1.33.5 |
+| **K-PaaS** | v1.7.0 |
+| **컨테이너 런타임** | CRI-O v1.33.5 |
 | **CNI** | Calico |
 | **CSI** | NFS Provisioner |
 | **Ingress** | Nginx Ingress Controller |
@@ -110,23 +110,23 @@ K-PaaS 클러스터의 상세 아키텍처, 네트워크 구성, 컴포넌트 �
 ### VPC 및 서브넷 구성
 
 ```
-VPC: test-kpaas (172.16.0.0/16)
+VPC: kpaas-vpc (172.16.0.0/16)
 │
 ├── Subnet: main_subnet (172.16.0.0/24)
 │   │
-│   ├── Master Nodes
-│   │   ├── master-1: 172.16.0.192
-│   │   ├── master-2: 172.16.0.157
-│   │   └── master-3: 172.16.0.254
+│   ├── Master Nodes (Fixed IPs for LB Target)
+│   │   ├── master-1: 172.16.0.101
+│   │   ├── master-2: 172.16.0.102
+│   │   └── master-3: 172.16.0.103
 │   │
-│   ├── Worker Nodes
-│   │   ├── worker-1: 172.16.0.12
-│   │   ├── worker-2: 172.16.0.78
-│   │   └── worker-3: 172.16.0.30
+│   ├── Worker Nodes (Fixed IPs for LB Target)
+│   │   ├── worker-1: 172.16.0.111
+│   │   ├── worker-2: 172.16.0.112
+│   │   └── worker-3: 172.16.0.113
 │   │
-│   ├── Load Balancers (VIP)
-│   │   ├── Master LB: 172.16.0.176
-│   │   └── Worker LB: 172.16.0.53
+│   ├── Load Balancers (VIP - Dynamic)
+│   │   ├── Master LB: 172.16.0.54 (6443, 2379)
+│   │   └── Worker LB: 172.16.0.88 (80→31080, 443→31443)
 │   │
 │   └── Service IP Ranges
 │       ├── Kubernetes Services: 10.233.0.0/18
@@ -142,14 +142,14 @@ VPC: test-kpaas (172.16.0.0/16)
 
 | 용도 | Private IP | Public IP | 포트 |
 |------|-----------|-----------|------|
-| **Master LB** | 172.16.0.176 | <Public IP> | 6443, 2379 |
-| **Worker LB** | 172.16.0.53 | <Public IP> | 80, 443 |
-| **Master-1** | 172.16.0.192 | <Public IP> | 22 |
-| **Master-2** | 172.16.0.157 | <Public IP> | 22 |
-| **Master-3** | 172.16.0.254 | <Public IP> | 22 |
-| **Worker-1** | 172.16.0.12 | <Public IP> | 22 |
-| **Worker-2** | 172.16.0.78 | <Public IP>| 22 |
-| **Worker-3** | 172.16.0.30 | <Public IP> | 22 |
+| **Master LB** | 172.16.0.54 | `<Master LB Public>` | 6443, 2379 |
+| **Worker LB** | 172.16.0.88 | `<Worker LB Public>` | 80, 443 |
+| **Master-1** | 172.16.0.101 | `<Master-1 Public>` | 22 |
+| **Master-2** | 172.16.0.102 | `<Master-2 Public>` | 22 |
+| **Master-3** | 172.16.0.103 | `<Master-3 Public>` | 22 |
+| **Worker-1** | 172.16.0.111 | `<Worker-1 Public>` | 22 |
+| **Worker-2** | 172.16.0.112 | `<Worker-2 Public>` | 22 |
+| **Worker-3** | 172.16.0.113 | `<Worker-3 Public>` | 22 |
 
 ### 네트워크 플로우
 
@@ -160,15 +160,15 @@ User/Client (kubectl)
       │
       │ HTTPS (TLS)
       ▼
-Master LB Public IP (<Public IP>:6443)
+Master LB Public IP (<Master LB Public>:6443)
       │
       │ TCP
       ▼
-Master LB VIP (172.16.0.176:6443)
+Master LB VIP (172.16.0.54:6443)
       │
-      ├──► Master-1 (172.16.0.192:6443)
-      ├──► Master-2 (172.16.0.157:6443)
-      └──► Master-3 (172.16.0.254:6443)
+      ├──► Master-1 (172.16.0.101:6443)
+      ├──► Master-2 (172.16.0.102:6443)
+      └──► Master-3 (172.16.0.103:6443)
 ```
 
 #### 외부 → 애플리케이션 서비스
@@ -178,15 +178,15 @@ User/Browser
       │
       │ HTTP/HTTPS
       ▼
-Worker LB Public IP (<Public IP>:80/443)
+Worker LB Public IP (<Worker LB Public>:80/443)
       │
       │ TCP
       ▼
-Worker LB VIP (172.16.0.53:80/443)
+Worker LB VIP (172.16.0.88:80/443)
       │
-      ├──► Worker-1 NodePort (172.16.0.12:31080/31443)
-      ├──► Worker-2 NodePort (172.16.0.78:31080/31443)
-      └──► Worker-3 NodePort (172.16.0.30:31080/31443)
+      ├──► Worker-1 NodePort (172.16.0.111:31080/31443)
+      ├──► Worker-2 NodePort (172.16.0.112:31080/31443)
+      └──► Worker-3 NodePort (172.16.0.113:31080/31443)
             │
             │ Ingress Controller
             ▼
@@ -211,13 +211,13 @@ CoreDNS Service: 10.233.0.3:53
 
 ```
 /etc/hosts 또는 DNS Server:
-<Public IP>  k-paas.io
-<Public IP>  portal.k-paas.io
-<Public IP>  harbor.k-paas.io
-<Public IP>  keycloak.k-paas.io
-<Public IP>  openbao.k-paas.io
-<Public IP>  chartmuseum.k-paas.io
-<Public IP> cluster-endpoint
+<Worker LB Public>  k-paas.io
+<Worker LB Public>  portal.k-paas.io
+<Worker LB Public>  harbor.k-paas.io
+<Worker LB Public>  keycloak.k-paas.io
+<Worker LB Public>  openbao.k-paas.io
+<Worker LB Public>  chartmuseum.k-paas.io
+<Master LB Public>  cluster-endpoint
 ```
 
 ---
@@ -267,7 +267,7 @@ Worker Node (x3)
 │   └── kube-proxy
 │
 ├── Container Runtime
-│   └── CRI-O v1.32.x
+│   └── CRI-O v1.33.5
 │       ├── Container Images
 │       ├── Container Networks
 │       └── Container Storage
@@ -340,7 +340,7 @@ Worker Node (x3)
 
 ### NFS 구성
 
-**서버**: Master-1 (172.16.0.192)
+**서버**: Master-1 (172.16.0.101)
 
 ```bash
 # NFS Export
@@ -357,7 +357,7 @@ drwxrwxrwx root:root /data
 
 ```bash
 # Mount
-172.16.0.192:/data  /data  nfs  defaults  0 0
+172.16.0.101:/data  /data  nfs  defaults  0 0
 
 # Usage
 - Container persistent volumes
@@ -421,9 +421,9 @@ API Server Certificate
 └── Subject Alternative Names:
     ├── DNS: kubernetes, kubernetes.default, *.svc.cluster.local
     ├── IP: 10.233.0.1 (Kubernetes Service)
-    ├── IP: 172.16.0.192, 172.16.0.157, 172.16.0.254 (Masters)
-    ├── IP: 172.16.0.176 (Master LB VIP)
-    └── IP: <Public IP> (Master LB Public)
+    ├── IP: 172.16.0.101, 172.16.0.102, 172.16.0.103 (Masters)
+    ├── IP: 172.16.0.54 (Master LB VIP)
+    └── IP: <Master LB Public> (Master LB Public)
 
 etcd Certificate
 ├── /etc/kubernetes/ssl/etcd/server.crt
@@ -503,7 +503,7 @@ Realm: k-paas
         │             │             │
         ▼             ▼             ▼
    Master-1      Master-2      Master-3
- (172.16.0.192)(172.16.0.157)(172.16.0.254)
+ (172.16.0.101)(172.16.0.102)(172.16.0.103)
         │             │             │
         └─────────────┼─────────────┘
                       │
@@ -593,7 +593,7 @@ Storage
 
 Access
 ├── Internal: harbor.k-paas.io
-└── External: https://<Public IP> (via Worker LB)
+└── External: https://<Worker LB Public> (via Worker LB)
 ```
 
 ### Keycloak (Identity & Access Management)
@@ -616,7 +616,7 @@ Integration
 
 Access
 ├── Internal: keycloak.k-paas.io
-└── External: https://<Public IP>/auth (via Worker LB)
+└── External: https://<Worker LB Public>/auth (via Worker LB)
 ```
 
 ### OpenBao (Secrets Management)
@@ -638,7 +638,7 @@ Integration
 
 Access
 ├── Internal: openbao.k-paas.io
-└── External: https://<Public IP>/openbao (via Worker LB)
+└── External: https://<Worker LB Public>/openbao (via Worker LB)
 ```
 
 ### MetalLB (Load Balancer)
@@ -666,7 +666,7 @@ Example Services
 Ingress Architecture
 ┌─────────────────────────────────────────────┐
 │          Worker Load Balancer               │
-│       (<Public IP>:80/443)                  │
+│       (<Worker LB Public>:80/443)           │
 └─────────────────────────────────────────────┘
                    │
         ┌──────────┼──────────┐
@@ -709,11 +709,11 @@ User (Browser)
     │
     │ 1. HTTPS Request (https://portal.k-paas.io)
     ▼
-DNS Resolution (<Public IP>)
+DNS Resolution (<Worker LB Public>)
     │
     │ 2. TCP Connection
     ▼
-Worker Load Balancer (<Public IP>:443)
+Worker Load Balancer (<Worker LB Public>:443)
     │
     │ 3. Distribute to NodePort
     ▼
@@ -755,11 +755,11 @@ Developer (Docker CLI)
     │
     │ 1. docker push harbor.k-paas.io/project/image:tag
     ▼
-DNS Resolution (<Public IP>)
+DNS Resolution (<Worker LB Public>)
     │
     │ 2. TLS Handshake
     ▼
-Worker Load Balancer (<Public IP>:443)
+Worker Load Balancer (<Worker LB Public>:443)
     │
     │ 3. Forward to NodePort
     ▼
@@ -787,7 +787,7 @@ Developer
 #### Pod → Pod (Same Node)
 
 ```
-Pod A (172.16.0.12)
+Pod A (Worker-1: 172.16.0.111)
     │
     │ 1. IP Packet to Pod B
     ▼
@@ -795,7 +795,7 @@ CNI Bridge (cali-xxx)
     │
     │ 2. Direct routing (same node)
     ▼
-Pod B (172.16.0.12)
+Pod B (Worker-1: 172.16.0.111)
 ```
 
 #### Pod → Pod (Different Node)

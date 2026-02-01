@@ -48,9 +48,9 @@ module "network" {
 
 ## Known Issues
 
-### Kakao Cloud Provider v0.1.4 Validation Bug
+### Kakao Cloud Provider v0.2.0 Validation Bug
 
-카카오 클라우드 프로바이더 v0.1.4에는 `kakaocloud_vpc` 리소스의 `name`, `cidr_block`, `subnet` 속성에서 Terraform 변수를 사용할 때 검증 오류가 발생하는 버그가 있습니다.
+카카오 클라우드 프로바이더 v0.2.0에는 `kakaocloud_vpc` 리소스의 `name`, `cidr_block`, `subnet` 속성에서 Terraform 변수를 사용할 때 검증 오류가 발생하는 버그가 있습니다.
 
 **증상:**
 - `Cidr_block is not valid`

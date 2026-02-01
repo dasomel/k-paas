@@ -1,0 +1,19 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform.tfvars.example
+crash.log
+crash.*.log
+*.log
+
+# Generated files
+*/generated/
+
+# SSH Keys
+*.pem
+
+# OS
+.DS_Store

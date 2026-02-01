@@ -8,9 +8,9 @@ echo "$CONFIG" | awk '/certificate-authority-data:/ {print $2}' | base64 -d > ca
 echo "$CONFIG" | awk '/client-certificate-data:/ {print $2}' | base64 -d > client.crt
 echo "$CONFIG" | awk '/client-key-data:/ {print $2}' | base64 -d > client.key
 
-# 2. Set cluster
+# 2. Set cluster (use IP instead of hostname to avoid certificate SAN issues)
 kubectl config set-cluster k-paas \
-  --server="https://cluster-endpoint:6443" \
+  --server="https://192.168.100.200:6443" \
   --certificate-authority=./ca.crt \
   --embed-certs=true
 
@@ -25,19 +25,11 @@ kubectl config set-context k-paas \
   --cluster=k-paas \
   --user=vagrant-user
 
-# 4. Set context (duplicate block, you may remove one)
-kubectl config set-context k-paas \
-  --cluster=k-paas \
-  --user=vagrant-user
-
 # 5. Activate context
 kubectl config use-context k-paas
 
 # Check if the current context is set correctly
 kubectl config current-context
-
-# Change context if necessary
-kubectl config use-context vagrant
 
 # Delete certificate files
 rm ca.crt client.crt client.key

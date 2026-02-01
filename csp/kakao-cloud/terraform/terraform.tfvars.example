@@ -8,7 +8,7 @@ application_credential_secret = "YOUR_APPLICATION_CREDENTIAL_SECRET"
 #####################################################################
 # Network Configuration
 #####################################################################
-# NOTE: Kakao Cloud provider v0.1.4 버그로 인해 VPC 리소스의 name, cidr_block,
+# NOTE: Kakao Cloud provider v0.2.0 버그로 인해 VPC 리소스의 name, cidr_block,
 # subnet 속성은 modules/network/main.tf에서 하드코딩되어 있습니다.
 # VPC 설정을 변경하려면 modules/network/main.tf 파일을 직접 수정해야 합니다.
 
@@ -38,9 +38,10 @@ master_count = 3  # Master 노드 수 (HA를 위해 3개 권장)
 worker_count = 3  # Worker 노드 수 (최소 3개 권장)
 
 # Instance specification
-image_name      = "Ubuntu 24.04"   # OS 이미지 (Ubuntu 24.04 또는 22.04)
-instance_flavor = "t1i.xlarge"     # 인스턴스 타입 (CPU 4core, RAM 8GB)
-volume_size     = 200              # 디스크 크기 (GB)
+image_name    = "Ubuntu 24.04"   # OS 이미지 (Ubuntu 24.04 또는 22.04)
+master_flavor = "t1i.large"      # Master 인스턴스 타입 (CPU 2core, RAM 4GB)
+worker_flavor = "t1i.xlarge"     # Worker 인스턴스 타입 (CPU 4core, RAM 8GB)
+volume_size   = 200              # 디스크 크기 (GB)
 
 #####################################################################
 # Load Balancer Configuration

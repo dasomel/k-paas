@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Global Variable Setting
-source /vagrant/scripts/00.global_variable.sh
+source /vagrant/00.global_variable.sh
 
 sudo apt-get install -y sshpass
 
